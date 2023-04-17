@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ProcessMe.Data;
@@ -11,9 +12,11 @@ using ProcessMe.Data;
 namespace ProcessMe.Migrations
 {
     [DbContext(typeof(ProcessMeDbContext))]
-    partial class ProcessMeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230417075500_EditConversionEnumToString")]
+    partial class EditConversionEnumToString
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using ProcessMe.Infrastructure.Enums;
 using ProcessMe.Models.Entities;
 
 namespace ProcessMe.Data.Configurations
@@ -17,6 +18,11 @@ namespace ProcessMe.Data.Configurations
             builder.HasOne(appeal => appeal.Employee)
                 .WithMany(employee => employee.Appeals)
                 .HasForeignKey("EmployeeId");
+
+            builder.Property(x => x.CommunicationWay)
+                .HasConversion(
+                cw => cw.ToString(),
+                cw => (CommunicationType)System.Enum.Parse(typeof(CommunicationType), cw));
         }
     }
 }

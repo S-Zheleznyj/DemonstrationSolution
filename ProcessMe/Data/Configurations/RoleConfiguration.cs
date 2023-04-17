@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using ProcessMe.Models.Entities;
+using ProcessMe.Infrastructure.Enums;
 
 namespace ProcessMe.Data.Configurations
 {
@@ -13,6 +14,11 @@ namespace ProcessMe.Data.Configurations
             builder.Property(x => x.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("Id");
+
+            builder.Property(x => x.Type)
+                .HasConversion(
+                r => r.ToString(),
+                r => (RoleType)System.Enum.Parse(typeof(RoleType), r));
         }
     }
 }

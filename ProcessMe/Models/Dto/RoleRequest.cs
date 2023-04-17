@@ -1,7 +1,9 @@
-﻿namespace ProcessMe.Models.Dto
+﻿using ProcessMe.Infrastructure.Enums;
+
+namespace ProcessMe.Models.Dto
 {
     public class RoleRequest
     {
-        public string Name { get; private set; }
+        public RoleType Type { get; private set; }
     }
 }

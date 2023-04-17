@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ProcessMe.Data;
@@ -11,9 +12,11 @@ using ProcessMe.Data;
 namespace ProcessMe.Migrations
 {
     [DbContext(typeof(ProcessMeDbContext))]
-    partial class ProcessMeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230417071937_RemoveIsDeleted")]
+    partial class RemoveIsDeleted
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,8 +40,8 @@ namespace ProcessMe.Migrations
                     b.Property<string>("ClientPhone")
                         .HasColumnType("text");
 
-                    b.Property<string>("CommunicationWay")
-                        .HasColumnType("text");
+                    b.Property<int?>("CommunicationWay")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
@@ -74,9 +77,8 @@ namespace ProcessMe.Migrations
                     b.Property<int>("EmployeesCount")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -147,8 +149,7 @@ namespace ProcessMe.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("Id");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
+                    b.Property<string>("Name")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
