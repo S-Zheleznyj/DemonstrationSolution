@@ -5,7 +5,7 @@ namespace ProcessMe.Models.Entities
     /// <summary> Оценка сотрудника</summary>
     public class Rating : EntityBase
     {
-        public double Value { get; private set; }
+        public int Value { get; private set; }
         public string Comment { get; private set; }
         public Guid EmployeeId { get; private set; }
         public Employee Employee { get; set; }
