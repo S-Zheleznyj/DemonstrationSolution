@@ -1,8 +1,8 @@
 ﻿using ProcessMe.Infrastructure.Enums;
 
-namespace ProcessMe.Models.Dto
+namespace ProcessMe.Models.DTOs.Incoming
 {
-    public class AppealRequest
+    public class AppealForCreationDto
     {
         public string ClientName { get; set; }
         public string ClientPhone { get; set; }

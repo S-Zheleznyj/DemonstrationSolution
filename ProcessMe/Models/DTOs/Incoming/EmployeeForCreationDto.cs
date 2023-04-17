@@ -1,8 +1,8 @@
 ﻿using ProcessMe.Models.Entities;
 
-namespace ProcessMe.Models.Dto
+namespace ProcessMe.Models.DTOs.Incoming
 {
-    public class EmployeeRequest
+    public class EmployeeForCreationDto
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

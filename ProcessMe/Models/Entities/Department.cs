@@ -1,5 +1,5 @@
 ﻿using ProcessMe.Infrastructure.Enums;
-using ProcessMe.Models.Dto;
+using ProcessMe.Models.DTOs.Incoming;
 
 namespace ProcessMe.Models.Entities
 {
@@ -11,20 +11,20 @@ namespace ProcessMe.Models.Entities
         public int EmployeesCount { get; private set; }
         public ICollection<Employee> Employees { get; set; }
         public Department() { }
-        public Department(DepartmentRequest departmentRequest)
+        public Department(DepartmentForCreationDto departmentRequest)
         {
             //Id = Guid.NewGuid();
             Type = departmentRequest.Type;
         }
 
-        internal static Department FromDepartmentRequest(DepartmentRequest departmentRequest)
+        internal static Department FromDepartmentRequest(DepartmentForCreationDto departmentRequest)
         {
             Department department = new(departmentRequest);
             department.Id = Guid.NewGuid();
             return department;
         }
 
-        internal static Department FromDepartmentRequestAndId(Guid id,DepartmentRequest departmentRequest)
+        internal static Department FromDepartmentRequestAndId(Guid id,DepartmentForCreationDto departmentRequest)
         {
             Department department = new(departmentRequest);
             department.Id = id;

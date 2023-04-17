@@ -1,4 +1,4 @@
-﻿using ProcessMe.Models.Dto;
+﻿using ProcessMe.Models.DTOs.Incoming;
 using ProcessMe.Models.Entities;
 
 namespace ProcessMe.Domain.Managers.Interfaces
@@ -6,8 +6,8 @@ namespace ProcessMe.Domain.Managers.Interfaces
     public interface IEmployeeManager
     {
         Task<Employee> GetItem(Guid id);
-        Task<Guid> Create(EmployeeRequest employee);
+        Task<Guid> Create(EmployeeForCreationDto employee);
         Task<IEnumerable<Employee>> GetItems();
-        Task Update(Guid id, EmployeeRequest employee);
+        Task Update(Guid id, EmployeeForCreationDto employee);
     }
 }

@@ -1,6 +1,7 @@
-﻿using ProcessMe.Data.Interfaces;
+﻿using AutoMapper;
+using ProcessMe.Data.Interfaces;
 using ProcessMe.Domain.Managers.Interfaces;
-using ProcessMe.Models.Dto;
+using ProcessMe.Models.DTOs.Incoming;
 using ProcessMe.Models.Entities;
 
 namespace ProcessMe.Domain.Managers.Implementation
@@ -8,13 +9,16 @@ namespace ProcessMe.Domain.Managers.Implementation
     public class DepartmentManager : IDepartmentManager
     {
         private readonly IDepartmentRepo _repo;
-        public DepartmentManager(IDepartmentRepo repo)
+        private readonly IMapper _mapper;
+        public DepartmentManager(IDepartmentRepo repo, IMapper mapper)
         {
             _repo = repo;
+            _mapper = mapper;
         }
-        public async Task<Guid> Create(DepartmentRequest departmentRequest)
+        public async Task<Guid> Create(DepartmentForCreationDto departmentRequest)
         {
-            Department result = Department.FromDepartmentRequest(departmentRequest);
+            //Department result = Department.FromDepartmentRequest(departmentRequest);
+            Department result = _mapper.Map<Department>(departmentRequest);
             await _repo.Add(result);
             return result.Id;
         }
@@ -29,7 +33,7 @@ namespace ProcessMe.Domain.Managers.Implementation
             return await _repo.GetItems();
         }
 
-        public async Task Update(Guid id, DepartmentRequest departmentRequest)
+        public async Task Update(Guid id, DepartmentForCreationDto departmentRequest)
         {
             Department result = Department.FromDepartmentRequestAndId(id, departmentRequest);
             await _repo.Update(result);

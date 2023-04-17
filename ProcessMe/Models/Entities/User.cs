@@ -1,4 +1,4 @@
-﻿using ProcessMe.Models.Dto;
+﻿using ProcessMe.Models.DTOs.Incoming;
 
 namespace ProcessMe.Models.Entities
 {
@@ -12,12 +12,12 @@ namespace ProcessMe.Models.Entities
         public ICollection<Employee> Employees { get; set; }
         public User() { }
 
-        internal static User FromUserRequest(UserRequest userRequest)
+        internal static User FromUserRequest(UserFroCreationDto userRequest)
         {
             throw new NotImplementedException();
         }
 
-        internal static User FromUserRequestAndId(Guid id, UserRequest userRequest)
+        internal static User FromUserRequestAndId(Guid id, UserFroCreationDto userRequest)
         {
             throw new NotImplementedException();
         }

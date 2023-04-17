@@ -1,8 +1,8 @@
 ﻿using ProcessMe.Infrastructure.Enums;
 
-namespace ProcessMe.Models.Dto
+namespace ProcessMe.Models.DTOs.Incoming
 {
-    public class RoleRequest
+    public class RoleForCreationDto
     {
         public RoleType Type { get; set; }
     }

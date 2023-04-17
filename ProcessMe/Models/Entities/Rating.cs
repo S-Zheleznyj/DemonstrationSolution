@@ -1,4 +1,4 @@
-﻿using ProcessMe.Models.Dto;
+﻿using ProcessMe.Models.DTOs.Incoming;
 
 namespace ProcessMe.Models.Entities
 {
@@ -11,21 +11,21 @@ namespace ProcessMe.Models.Entities
         public Employee Employee { get; set; }
         public Rating() { }
 
-        public Rating(RatingRequest ratingRequest)
+        public Rating(RatingForCreationDto ratingRequest)
         {
             Value = ratingRequest.Value;
             Comment = ratingRequest.Comment;
             EmployeeId = ratingRequest.EmployeeId;
         }
 
-        internal static Rating FromRatingRequest(RatingRequest ratingRequest)
+        internal static Rating FromRatingRequest(RatingForCreationDto ratingRequest)
         {
             Rating rating = new(ratingRequest);
             rating.Id = Guid.NewGuid();
             return rating;
         }
 
-        internal static Rating FromRatingRequestAndId(Guid id, RatingRequest ratingRequest)
+        internal static Rating FromRatingRequestAndId(Guid id, RatingForCreationDto ratingRequest)
         {
             Rating rating = new(ratingRequest);
             rating.Id = id;

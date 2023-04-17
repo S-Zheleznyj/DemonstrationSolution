@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProcessMe.Domain.Managers.Interfaces;
-using ProcessMe.Models.Dto;
+using ProcessMe.Models.DTOs.Incoming;
 using ProcessMe.Models.Entities;
 
 namespace ProcessMe.Controllers
@@ -32,7 +32,7 @@ namespace ProcessMe.Controllers
 
         /// <summary> Создает департамент</summary>
         [HttpPost]
-        public async Task<IActionResult> Create(DepartmentRequest departmentRequest)
+        public async Task<IActionResult> Create(DepartmentForCreationDto departmentRequest)
         {
             var result = await _manager.Create(departmentRequest);
 
@@ -41,7 +41,7 @@ namespace ProcessMe.Controllers
 
         /// <summary> Редактирует департамент</summary>
         [HttpPut]
-        public async Task<IActionResult> Update([FromQuery] Guid id, [FromBody] DepartmentRequest departmentRequest)
+        public async Task<IActionResult> Update([FromQuery] Guid id, [FromBody] DepartmentForCreationDto departmentRequest)
         {
             await _manager.Update(id, departmentRequest);
 

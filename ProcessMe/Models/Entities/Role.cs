@@ -1,5 +1,5 @@
 ﻿using ProcessMe.Infrastructure.Enums;
-using ProcessMe.Models.Dto;
+using ProcessMe.Models.DTOs.Incoming;
 
 namespace ProcessMe.Models.Entities
 {
@@ -10,20 +10,20 @@ namespace ProcessMe.Models.Entities
         public ICollection<User> Users { get; set; }
         public Role() { }
 
-        public Role(RoleRequest roleRequest)
+        public Role(RoleForCreationDto roleRequest)
         {
             Id = Guid.NewGuid();
             Type = roleRequest.Type;
         }
 
-        internal static Role FromRoleRequest(RoleRequest roleRequest)
+        internal static Role FromRoleRequest(RoleForCreationDto roleRequest)
         {
             Role role = new(roleRequest);
             role.Id = Guid.NewGuid();
             return role;
         }
 
-        internal static Role FromRoleRequestAndId(Guid id, RoleRequest roleRequest)
+        internal static Role FromRoleRequestAndId(Guid id, RoleForCreationDto roleRequest)
         {
             Role role = new(roleRequest);
             role.Id = id;

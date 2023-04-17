@@ -43,7 +43,7 @@ namespace ProcessMe.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<Guid>("EmployeeId")
+                    b.Property<Guid?>("EmployeeId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime?>("EndProcessDate")
@@ -179,9 +179,7 @@ namespace ProcessMe.Migrations
                 {
                     b.HasOne("ProcessMe.Models.Entities.Employee", "Employee")
                         .WithMany("Appeals")
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("EmployeeId");
 
                     b.Navigation("Employee");
                 });

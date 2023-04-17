@@ -1,6 +1,7 @@
-﻿using ProcessMe.Data.Interfaces;
+﻿using AutoMapper;
+using ProcessMe.Data.Interfaces;
 using ProcessMe.Domain.Managers.Interfaces;
-using ProcessMe.Models.Dto;
+using ProcessMe.Models.DTOs.Incoming;
 using ProcessMe.Models.Entities;
 
 namespace ProcessMe.Domain.Managers.Implementation
@@ -8,13 +9,16 @@ namespace ProcessMe.Domain.Managers.Implementation
     public class EmployeeManager : IEmployeeManager
     {
         private readonly IEmployeeRepo _repo;
-        public EmployeeManager(IEmployeeRepo repo)
+        private readonly IMapper _mapper;
+        public EmployeeManager(IEmployeeRepo repo, IMapper mapper)
         {
             _repo = repo;
+            _mapper = mapper;
         }
-        public async Task<Guid> Create(EmployeeRequest employeeRequest)
+        public async Task<Guid> Create(EmployeeForCreationDto employeeRequest)
         {
-            Employee result = Employee.FromEmployeeRequest(employeeRequest);
+            //Employee result = Employee.FromEmployeeRequest(employeeRequest);
+            Employee result = _mapper.Map<Employee>(employeeRequest);
             await _repo.Add(result);
             return result.Id;
         }
@@ -29,7 +33,7 @@ namespace ProcessMe.Domain.Managers.Implementation
             return await _repo.GetItems();
         }
 
-        public async Task Update(Guid id, EmployeeRequest employeeRequest)
+        public async Task Update(Guid id, EmployeeForCreationDto employeeRequest)
         {
             Employee result = Employee.FromEmployeeRequestAndId(id, employeeRequest);
             await _repo.Update(result);

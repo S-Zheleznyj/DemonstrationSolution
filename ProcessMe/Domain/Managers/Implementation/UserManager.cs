@@ -1,6 +1,6 @@
 ﻿using ProcessMe.Data.Interfaces;
 using ProcessMe.Domain.Managers.Interfaces;
-using ProcessMe.Models.Dto;
+using ProcessMe.Models.DTOs.Incoming;
 using ProcessMe.Models.Entities;
 
 namespace ProcessMe.Domain.Managers.Implementation
@@ -12,7 +12,7 @@ namespace ProcessMe.Domain.Managers.Implementation
         {
             _repo = repo;
         }
-        public async Task<Guid> Create(UserRequest userRequest)
+        public async Task<Guid> Create(UserFroCreationDto userRequest)
         {
             // Сделать JWT
             User result = User.FromUserRequest(userRequest);
@@ -30,7 +30,7 @@ namespace ProcessMe.Domain.Managers.Implementation
             return await _repo.GetItems();
         }
 
-        public async Task Update(Guid id, UserRequest userRequest)
+        public async Task Update(Guid id, UserFroCreationDto userRequest)
         {
             User result = User.FromUserRequestAndId(id, userRequest);
             await _repo.Update(result);

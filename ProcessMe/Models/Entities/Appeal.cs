@@ -1,5 +1,5 @@
 ﻿using ProcessMe.Infrastructure.Enums;
-using ProcessMe.Models.Dto;
+using ProcessMe.Models.DTOs.Incoming;
 
 namespace ProcessMe.Models.Entities
 {
@@ -18,7 +18,7 @@ namespace ProcessMe.Models.Entities
         public Employee Employee { get; set; }
         public Appeal() { }
 
-        public Appeal(AppealRequest appealRequest)
+        public Appeal(AppealForCreationDto appealRequest)
         {
             //Id = Guid.NewGuid();
             ClientName = appealRequest.ClientName;
@@ -29,13 +29,13 @@ namespace ProcessMe.Models.Entities
             RecieveDate = DateTime.UtcNow;
         }
 
-        internal static Appeal FromAppealRequest(AppealRequest appealRequest)
+        internal static Appeal FromAppealRequest(AppealForCreationDto appealRequest)
         {
             Appeal appeal = new(appealRequest);
             appeal.Id = Guid.NewGuid();
             return appeal;
         }
-        internal static Appeal FromAppealRequestAndId(Guid id, AppealRequest appealRequest)
+        internal static Appeal FromAppealRequestAndId(Guid id, AppealForCreationDto appealRequest)
         {
             Appeal appeal = new(appealRequest);
             appeal.Id = id;

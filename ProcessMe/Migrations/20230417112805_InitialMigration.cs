@@ -99,7 +99,7 @@ namespace ProcessMe.Migrations
                     RecieveDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     StartProcessDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     EndProcessDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    EmployeeId = table.Column<Guid>(type: "uuid", nullable: false)
+                    EmployeeId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -108,8 +108,7 @@ namespace ProcessMe.Migrations
                         name: "FK_Appeals_Employess_EmployeeId",
                         column: x => x.EmployeeId,
                         principalTable: "Employess",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(

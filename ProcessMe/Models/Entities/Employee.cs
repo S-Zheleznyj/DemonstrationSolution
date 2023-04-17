@@ -1,4 +1,4 @@
-﻿using ProcessMe.Models.Dto;
+﻿using ProcessMe.Models.DTOs.Incoming;
 
 namespace ProcessMe.Models.Entities
 {
@@ -18,7 +18,7 @@ namespace ProcessMe.Models.Entities
         public User User { get; set; }
         public Employee() { }
 
-        public Employee(EmployeeRequest employeeRequest)
+        public Employee(EmployeeForCreationDto employeeRequest)
         {
             Id = Guid.NewGuid();
             FirstName = employeeRequest.FirstName;
@@ -28,14 +28,14 @@ namespace ProcessMe.Models.Entities
             UserId = employeeRequest.UserId;
         }
 
-        internal static Employee FromEmployeeRequest(EmployeeRequest employeeRequest)
+        internal static Employee FromEmployeeRequest(EmployeeForCreationDto employeeRequest)
         {
             Employee employee = new(employeeRequest);
             employee.Id = Guid.NewGuid();
             return employee;
         }
 
-        internal static Employee FromEmployeeRequestAndId(Guid id, EmployeeRequest employeeRequest)
+        internal static Employee FromEmployeeRequestAndId(Guid id, EmployeeForCreationDto employeeRequest)
         {
             Employee employee = new(employeeRequest);
             employee.Id = id;

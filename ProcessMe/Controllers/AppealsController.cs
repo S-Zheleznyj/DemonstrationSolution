@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProcessMe.Domain.Managers.Interfaces;
-using ProcessMe.Models.Dto;
+using ProcessMe.Models.DTOs.Incoming;
 using ProcessMe.Models.Entities;
 
 namespace ProcessMe.Controllers
@@ -26,13 +26,15 @@ namespace ProcessMe.Controllers
         public async Task<IActionResult> Get(Guid id)
         {
             var result = await _manager.GetItem(id);
+            if (result == null)
+                return NotFound();
 
             return Ok(result);
         }
 
         /// <summary> Создает обращение</summary>
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody]AppealRequest appealRequest)
+        public async Task<IActionResult> Create([FromBody]AppealForCreationDto appealRequest)
         {
             var result = await _manager.Create(appealRequest);
 
@@ -41,7 +43,7 @@ namespace ProcessMe.Controllers
 
         /// <summary> Редактирует обращение</summary>
         [HttpPut]
-        public async Task<IActionResult> Update([FromQuery]Guid id,[FromBody]AppealRequest appealRequest)
+        public async Task<IActionResult> Update([FromQuery]Guid id,[FromBody]AppealForCreationDto appealRequest)
         {
             await _manager.Update(id, appealRequest);
 
