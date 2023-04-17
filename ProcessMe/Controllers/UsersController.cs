@@ -5,9 +5,7 @@ using ProcessMe.Models.Entities;
 
 namespace ProcessMe.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class UsersController : ControllerBase
+    public class UsersController : ProcessMeBaseController
     {
         private readonly IUserManager _manager;
         public UsersController(IUserManager manager)
