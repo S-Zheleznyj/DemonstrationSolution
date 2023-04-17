@@ -43,9 +43,9 @@ namespace ProcessMe.Controllers
 
         /// <summary> Редактирует обращение</summary>
         [HttpPut]
-        public async Task<IActionResult> Update(Appeal appeal)
+        public async Task<IActionResult> Update([FromQuery]Guid id,[FromBody]AppealRequest appealRequest)
         {
-            await _manager.Update(appeal);
+            await _manager.Update(id, appealRequest);
 
             return NoContent();
         }

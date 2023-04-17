@@ -4,8 +4,8 @@ namespace ProcessMe.Models.Dto
 {
     public class RatingRequest
     {
-        public double Value { get; private set; }
-        public string Comment { get; private set; }
-        public Guid EmployeeId { get; private set; }
+        public double Value { get; set; }
+        public string Comment { get; set; }
+        public Guid EmployeeId { get; set; }
     }
 }

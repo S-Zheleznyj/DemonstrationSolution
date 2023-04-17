@@ -43,9 +43,9 @@ namespace ProcessMe.Controllers
 
         /// <summary> Редактирует пользователя</summary>
         [HttpPut]
-        public async Task<IActionResult> Update(User user)
+        public async Task<IActionResult> Update([FromQuery] Guid id, [FromBody] UserRequest userRequest)
         {
-            await _manager.Update(user);
+            await _manager.Update(id, userRequest);
 
             return NoContent();
         }

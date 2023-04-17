@@ -8,6 +8,6 @@ namespace ProcessMe.Domain.Managers.Interfaces
         Task<Department> GetItem(Guid id);
         Task<Guid> Create(DepartmentRequest department);
         Task<IEnumerable<Department>> GetItems();
-        Task Update(Department department);
+        Task Update(Guid id, DepartmentRequest department);
     }
 }

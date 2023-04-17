@@ -4,6 +4,6 @@ namespace ProcessMe.Models.Dto
 {
     public class RoleRequest
     {
-        public RoleType Type { get; private set; }
+        public RoleType Type { get; set; }
     }
 }

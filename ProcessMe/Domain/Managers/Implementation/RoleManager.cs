@@ -29,9 +29,10 @@ namespace ProcessMe.Domain.Managers.Implementation
             return await _repo.GetItems();
         }
 
-        public async Task Update(Role role)
+        public async Task Update(Guid id, RoleRequest roleRequest)
         {
-            await _repo.Update(role);
+            Role result = Role.FromRoleRequestAndId(id, roleRequest);
+            await _repo.Update(result);
         }
     }
 }

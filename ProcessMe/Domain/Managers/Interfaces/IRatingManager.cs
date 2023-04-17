@@ -6,8 +6,8 @@ namespace ProcessMe.Domain.Managers.Interfaces
     public interface IRatingManager
     {
         Task<Rating> GetItem(Guid id);
-        Task<Guid> Create(RatingRequest appeal);
+        Task<Guid> Create(RatingRequest rating);
         Task<IEnumerable<Rating>> GetItems();
-        Task Update(Rating rating);
+        Task Update(Guid id, RatingRequest rating);
     }
 }

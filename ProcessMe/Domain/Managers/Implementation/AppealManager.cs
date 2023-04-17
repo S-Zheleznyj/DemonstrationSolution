@@ -29,9 +29,10 @@ namespace ProcessMe.Domain.Managers.Implementation
             return await _repo.GetItems();
         }
 
-        public async Task Update(Appeal appeal)
+        public async Task Update(Guid id, AppealRequest appealRequest)
         {
-            await _repo.Update(appeal);
+            Appeal result = Appeal.FromAppealRequestAndId(id, appealRequest);
+            await _repo.Update(result);
         }
     }
 }

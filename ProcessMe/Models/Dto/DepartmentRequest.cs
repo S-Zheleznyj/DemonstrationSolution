@@ -5,6 +5,6 @@ namespace ProcessMe.Models.Dto
 {
     public class DepartmentRequest
     {
-        public DepartmentType Type { get; private set; }
+        public DepartmentType Type { get; set; }
     }
 }

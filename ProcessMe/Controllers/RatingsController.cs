@@ -43,9 +43,9 @@ namespace ProcessMe.Controllers
 
         /// <summary> Редактирует оценку</summary>
         [HttpPut]
-        public async Task<IActionResult> Update(Rating rating)
+        public async Task<IActionResult> Update([FromQuery] Guid id, [FromBody] RatingRequest ratingRequest)
         {
-            await _manager.Update(rating);
+            await _manager.Update(id, ratingRequest);
 
             return NoContent();
         }

@@ -30,9 +30,10 @@ namespace ProcessMe.Domain.Managers.Implementation
             return await _repo.GetItems();
         }
 
-        public async Task Update(User user)
+        public async Task Update(Guid id, UserRequest userRequest)
         {
-            await _repo.Update(user);
+            User result = User.FromUserRequestAndId(id, userRequest);
+            await _repo.Update(result);
         }
     }
 }

@@ -28,9 +28,18 @@ namespace ProcessMe.Models.Entities
             UserId = employeeRequest.UserId;
         }
 
-        internal static Employee FromEmployeeRequest(EmployeeRequest employeeRequest)
+        internal static Employee FromDepartmentRequest(EmployeeRequest employeeRequest)
         {
-            return new(employeeRequest);
+            Employee employee = new(employeeRequest);
+            employee.Id = Guid.NewGuid();
+            return employee;
+        }
+
+        internal static Employee FromDepartmentRequestAndId(Guid id, EmployeeRequest employeeRequest)
+        {
+            Employee employee = new(employeeRequest);
+            employee.Id = id;
+            return employee;
         }
     }
 }

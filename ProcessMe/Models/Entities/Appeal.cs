@@ -20,7 +20,7 @@ namespace ProcessMe.Models.Entities
 
         public Appeal(AppealRequest appealRequest)
         {
-            Id = Guid.NewGuid();
+            //Id = Guid.NewGuid();
             ClientName = appealRequest.ClientName;
             ClientPhone = appealRequest.ClientPhone;
             ClientEmail = appealRequest.ClientEmail;
@@ -31,7 +31,15 @@ namespace ProcessMe.Models.Entities
 
         internal static Appeal FromAppealRequest(AppealRequest appealRequest)
         {
-            return new Appeal(appealRequest);
+            Appeal appeal = new(appealRequest);
+            appeal.Id = Guid.NewGuid();
+            return appeal;
+        }
+        internal static Appeal FromAppealRequestAndId(Guid id, AppealRequest appealRequest)
+        {
+            Appeal appeal = new(appealRequest);
+            appeal.Id = id;
+            return appeal;
         }
     }
 }

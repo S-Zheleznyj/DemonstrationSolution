@@ -8,6 +8,6 @@ namespace ProcessMe.Domain.Managers.Interfaces
         Task<Appeal> GetItem(Guid id);
         Task<Guid> Create(AppealRequest appeal);
         Task<IEnumerable<Appeal>> GetItems();
-        Task Update(Appeal appeal);
+        Task Update(Guid id, AppealRequest appeal);
     }
 }

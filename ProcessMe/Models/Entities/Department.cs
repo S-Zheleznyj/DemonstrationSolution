@@ -13,13 +13,22 @@ namespace ProcessMe.Models.Entities
         public Department() { }
         public Department(DepartmentRequest departmentRequest)
         {
-            Id = Guid.NewGuid();
+            //Id = Guid.NewGuid();
             Type = departmentRequest.Type;
         }
 
         internal static Department FromDepartmentRequest(DepartmentRequest departmentRequest)
         {
-            return new(departmentRequest);
+            Department department = new(departmentRequest);
+            department.Id = Guid.NewGuid();
+            return department;
+        }
+
+        internal static Department FromDepartmentRequestAndId(Guid id,DepartmentRequest departmentRequest)
+        {
+            Department department = new(departmentRequest);
+            department.Id = id;
+            return department;
         }
     }
 }

@@ -16,5 +16,10 @@ namespace ProcessMe.Models.Entities
         {
             throw new NotImplementedException();
         }
+
+        internal static User FromUserRequestAndId(Guid id, UserRequest userRequest)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -29,9 +29,10 @@ namespace ProcessMe.Domain.Managers.Implementation
             return await _repo.GetItems();
         }
 
-        public async Task Update(Employee employee)
+        public async Task Update(Guid id, EmployeeRequest employeeRequest)
         {
-            await _repo.Update(employee);
+            Employee result = Employee.FromEmployeeRequestAndId(id, employeeRequest);
+            await _repo.Update(result);
         }
     }
 }

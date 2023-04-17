@@ -29,9 +29,10 @@ namespace ProcessMe.Domain.Managers.Implementation
             return await _repo.GetItems();
         }
 
-        public async Task Update(Rating rating)
+        public async Task Update(Guid id, RatingRequest ratingRequest)
         {
-            await _repo.Update(rating);
+            Rating result = Rating.FromRatingRequestAndId(id, ratingRequest);
+            await _repo.Update(result);
         }
     }
 }

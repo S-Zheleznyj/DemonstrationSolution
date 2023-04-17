@@ -16,9 +16,18 @@ namespace ProcessMe.Models.Entities
             Type = roleRequest.Type;
         }
 
-        internal static Role FromRoleRequest(RoleRequest roleRequest)
+        internal static Role FromDepartmentRequest(RoleRequest roleRequest)
         {
-            return new(roleRequest);
+            Role role = new(roleRequest);
+            role.Id = Guid.NewGuid();
+            return role;
+        }
+
+        internal static Role FromDepartmentRequestAndId(Guid id, RoleRequest roleRequest)
+        {
+            Role role = new(roleRequest);
+            role.Id = id;
+            return role;
         }
     }
 }

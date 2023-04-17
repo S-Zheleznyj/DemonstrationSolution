@@ -18,9 +18,18 @@ namespace ProcessMe.Models.Entities
             EmployeeId = ratingRequest.EmployeeId;
         }
 
-        internal static Rating FromRatingRequest(RatingRequest ratingRequest)
+        internal static Rating FromDepartmentRequest(RatingRequest ratingRequest)
         {
-            return new(ratingRequest);
+            Rating rating = new(ratingRequest);
+            rating.Id = Guid.NewGuid();
+            return rating;
+        }
+
+        internal static Rating FromDepartmentRequestAndId(Guid id, RatingRequest ratingRequest)
+        {
+            Rating rating = new(ratingRequest);
+            rating.Id = id;
+            return rating;
         }
     }
 }

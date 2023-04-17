@@ -29,9 +29,10 @@ namespace ProcessMe.Domain.Managers.Implementation
             return await _repo.GetItems();
         }
 
-        public async Task Update(Department department)
+        public async Task Update(Guid id, DepartmentRequest departmentRequest)
         {
-            await _repo.Update(department);
+            Department result = Department.FromDepartmentRequestAndId(id, departmentRequest);
+            await _repo.Update(result);
         }
     }
 }
