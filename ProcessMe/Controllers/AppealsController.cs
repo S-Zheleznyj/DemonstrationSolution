@@ -34,11 +34,11 @@ namespace ProcessMe.Controllers
 
         /// <summary> Создает обращение</summary>
         [HttpPost]
-        public async Task<IActionResult> Create(AppealRequest appealRequest)
+        public async Task<IActionResult> Create([FromBody]AppealRequest appealRequest)
         {
             var result = await _manager.Create(appealRequest);
 
-            return CreatedAtAction("Get", appealRequest, result);
+            return CreatedAtAction("Get", new { id = result}, result);
         }
 
         /// <summary> Редактирует обращение</summary>

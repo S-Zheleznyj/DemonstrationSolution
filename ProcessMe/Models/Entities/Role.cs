@@ -7,7 +7,7 @@ namespace ProcessMe.Models.Entities
     public class Role : EntityBase
     {
         public RoleType Type { get; private set; }
-        public ICollection<User> Users { get; private set; }
+        public ICollection<User> Users { get; set; }
         public Role() { }
 
         public Role(RoleRequest roleRequest)
@@ -16,14 +16,14 @@ namespace ProcessMe.Models.Entities
             Type = roleRequest.Type;
         }
 
-        internal static Role FromDepartmentRequest(RoleRequest roleRequest)
+        internal static Role FromRoleRequest(RoleRequest roleRequest)
         {
             Role role = new(roleRequest);
             role.Id = Guid.NewGuid();
             return role;
         }
 
-        internal static Role FromDepartmentRequestAndId(Guid id, RoleRequest roleRequest)
+        internal static Role FromRoleRequestAndId(Guid id, RoleRequest roleRequest)
         {
             Role role = new(roleRequest);
             role.Id = id;

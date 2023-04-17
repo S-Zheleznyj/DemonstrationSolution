@@ -8,8 +8,8 @@ namespace ProcessMe.Models.Entities
         public string Username { get; private set; }
         public byte[] PasswordHash { get; private set; }
         public Guid RoleId { get; private set; }
-        public Role Role { get; private set; }
-        public ICollection<Employee> Employees { get; private set; }
+        public Role Role { get; set; }
+        public ICollection<Employee> Employees { get; set; }
         public User() { }
 
         internal static User FromUserRequest(UserRequest userRequest)

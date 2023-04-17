@@ -38,7 +38,7 @@ namespace ProcessMe.Controllers
         {
             var result = await _manager.Create(ratingRequest);
 
-            return CreatedAtAction("Get", ratingRequest, result);
+            return CreatedAtAction("Get", new { id = result }, result);
         }
 
         /// <summary> Редактирует оценку</summary>

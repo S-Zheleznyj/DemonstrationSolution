@@ -38,7 +38,7 @@ namespace ProcessMe.Controllers
         {
             var result = await _manager.Create(roleRequest);
 
-            return CreatedAtAction("Get", roleRequest, result);
+            return CreatedAtAction("Get", new { id = result }, result);
         }
 
         /// <summary> Редактирует роль</summary>

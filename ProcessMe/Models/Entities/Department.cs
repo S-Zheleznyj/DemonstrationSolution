@@ -9,7 +9,7 @@ namespace ProcessMe.Models.Entities
 
         public DepartmentType Type { get; private set; }
         public int EmployeesCount { get; private set; }
-        public ICollection<Employee> Employees { get; private set; }
+        public ICollection<Employee> Employees { get; set; }
         public Department() { }
         public Department(DepartmentRequest departmentRequest)
         {

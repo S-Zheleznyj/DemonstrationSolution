@@ -12,8 +12,8 @@ using ProcessMe.Data;
 namespace ProcessMe.Migrations
 {
     [DbContext(typeof(ProcessMeDbContext))]
-    [Migration("20230414194731_AddRoles_Users_IsDeleted")]
-    partial class AddRoles_Users_IsDeleted
+    [Migration("20230417091225_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,23 +40,17 @@ namespace ProcessMe.Migrations
                     b.Property<string>("ClientPhone")
                         .HasColumnType("text");
 
-                    b.Property<int?>("CommunicationWay")
-                        .HasColumnType("integer");
+                    b.Property<string>("CommunicationWay")
+                        .HasColumnType("text");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("EmoloyeeId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("EmployeeId")
+                    b.Property<Guid>("EmployeeId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime?>("EndProcessDate")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
 
                     b.Property<DateTime>("RecieveDate")
                         .HasColumnType("timestamp with time zone");
@@ -80,8 +74,9 @@ namespace ProcessMe.Migrations
                     b.Property<int>("EmployeesCount")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("integer");
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -106,18 +101,20 @@ namespace ProcessMe.Migrations
                     b.Property<bool>("IsBusy")
                         .HasColumnType("boolean");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
-
                     b.Property<string>("LastName")
                         .HasColumnType("text");
 
                     b.Property<double>("Rating")
                         .HasColumnType("double precision");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
                     b.HasIndex("DepartmentId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Employess", (string)null);
                 });
@@ -133,9 +130,6 @@ namespace ProcessMe.Migrations
 
                     b.Property<Guid>("EmployeeId")
                         .HasColumnType("uuid");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
 
                     b.Property<double>("Value")
                         .HasColumnType("double precision");
@@ -153,7 +147,8 @@ namespace ProcessMe.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("Id");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Type")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -166,9 +161,6 @@ namespace ProcessMe.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
                         .HasColumnName("Id");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean");
 
                     b.Property<byte[]>("PasswordHash")
                         .HasColumnType("bytea");
@@ -190,7 +182,9 @@ namespace ProcessMe.Migrations
                 {
                     b.HasOne("ProcessMe.Models.Entities.Employee", "Employee")
                         .WithMany("Appeals")
-                        .HasForeignKey("EmployeeId");
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Employee");
                 });
@@ -203,7 +197,15 @@ namespace ProcessMe.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ProcessMe.Models.Entities.User", "User")
+                        .WithMany("Employees")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Department");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ProcessMe.Models.Entities.Rating", b =>
@@ -243,6 +245,11 @@ namespace ProcessMe.Migrations
             modelBuilder.Entity("ProcessMe.Models.Entities.Role", b =>
                 {
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("ProcessMe.Models.Entities.User", b =>
+                {
+                    b.Navigation("Employees");
                 });
 #pragma warning restore 612, 618
         }

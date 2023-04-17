@@ -8,7 +8,7 @@ namespace ProcessMe.Models.Entities
         public double Value { get; private set; }
         public string Comment { get; private set; }
         public Guid EmployeeId { get; private set; }
-        public Employee Employee { get; private set; }
+        public Employee Employee { get; set; }
         public Rating() { }
 
         public Rating(RatingRequest ratingRequest)
@@ -18,14 +18,14 @@ namespace ProcessMe.Models.Entities
             EmployeeId = ratingRequest.EmployeeId;
         }
 
-        internal static Rating FromDepartmentRequest(RatingRequest ratingRequest)
+        internal static Rating FromRatingRequest(RatingRequest ratingRequest)
         {
             Rating rating = new(ratingRequest);
             rating.Id = Guid.NewGuid();
             return rating;
         }
 
-        internal static Rating FromDepartmentRequestAndId(Guid id, RatingRequest ratingRequest)
+        internal static Rating FromRatingRequestAndId(Guid id, RatingRequest ratingRequest)
         {
             Rating rating = new(ratingRequest);
             rating.Id = id;

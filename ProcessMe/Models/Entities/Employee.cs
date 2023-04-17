@@ -11,11 +11,11 @@ namespace ProcessMe.Models.Entities
         public bool IsBusy { get; private set; }
         public double Rating { get; private set; }
         public Guid DepartmentId { get; private set; }
-        public Department Department { get; private set; }
-        public ICollection<Appeal> Appeals { get; private set; }
-        public ICollection<Rating> Ratings { get; private set; }
+        public Department Department { get; set; }
+        public ICollection<Appeal> Appeals { get; set; }
+        public ICollection<Rating> Ratings { get; set; }
         public Guid UserId { get; private set; }
-        public User User { get; private set; }
+        public User User { get; set; }
         public Employee() { }
 
         public Employee(EmployeeRequest employeeRequest)
@@ -28,14 +28,14 @@ namespace ProcessMe.Models.Entities
             UserId = employeeRequest.UserId;
         }
 
-        internal static Employee FromDepartmentRequest(EmployeeRequest employeeRequest)
+        internal static Employee FromEmployeeRequest(EmployeeRequest employeeRequest)
         {
             Employee employee = new(employeeRequest);
             employee.Id = Guid.NewGuid();
             return employee;
         }
 
-        internal static Employee FromDepartmentRequestAndId(Guid id, EmployeeRequest employeeRequest)
+        internal static Employee FromEmployeeRequestAndId(Guid id, EmployeeRequest employeeRequest)
         {
             Employee employee = new(employeeRequest);
             employee.Id = id;

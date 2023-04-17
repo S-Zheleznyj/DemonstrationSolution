@@ -14,8 +14,8 @@ namespace ProcessMe.Models.Entities
         public DateTime RecieveDate { get; private set; }
         public DateTime? StartProcessDate { get; private set; }
         public DateTime? EndProcessDate { get; private set; }
-        public Guid? EmoloyeeId { get; private set; }
-        public Employee Employee { get; private set; }
+        public Guid? EmployeeId { get; private set; }
+        public Employee Employee { get; set; }
         public Appeal() { }
 
         public Appeal(AppealRequest appealRequest)
