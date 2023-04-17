@@ -4,6 +4,6 @@
     {
         public const string EmailError = "Passed email has wrong format";
         public const string EmptyStringError = "This field must not be empty";
-        public const string NeedEmailWhenNotPhone = "Please, enter phone or email";
+        public const string EmailOrPhoneError = "Please, enter phone or email";
     }
 }
