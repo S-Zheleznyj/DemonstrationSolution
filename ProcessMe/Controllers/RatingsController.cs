@@ -42,7 +42,7 @@ namespace ProcessMe.Controllers
         }
 
         /// <summary> Редактирует оценку</summary>
-        [HttpPost]
+        [HttpPut]
         public async Task<IActionResult> Update(Rating rating)
         {
             await _manager.Update(rating);

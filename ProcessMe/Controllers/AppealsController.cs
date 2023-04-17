@@ -42,7 +42,7 @@ namespace ProcessMe.Controllers
         }
 
         /// <summary> Редактирует обращение</summary>
-        [HttpPost]
+        [HttpPut]
         public async Task<IActionResult> Update(Appeal appeal)
         {
             await _manager.Update(appeal);
