@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.ConfigureDbContext(builder.Configuration);
 builder.Services.ConfigureRepositories();
 builder.Services.ConfigureDomainManagers();
+builder.Services.ConfigureValidators();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>

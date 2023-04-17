@@ -1,9 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.EntityFrameworkCore;
 using ProcessMe.Data;
 using ProcessMe.Data.Implementation;
 using ProcessMe.Data.Interfaces;
 using ProcessMe.Domain.Managers.Implementation;
 using ProcessMe.Domain.Managers.Interfaces;
+using ProcessMe.Infrastructure.Validation;
 
 namespace ProcessMe.Infrastructure.Extensions
 {
@@ -41,6 +44,14 @@ namespace ProcessMe.Infrastructure.Extensions
             services.AddScoped<IRatingManager, RatingManager>();
             services.AddScoped<IRoleManager, RoleManager>();
             services.AddScoped<IUserManager, UserManager>();
+        }
+
+        /// <summary> Конфигурирует валидаторы</summary>
+        public static void ConfigureValidators(this IServiceCollection services)
+        {
+            services.AddFluentValidationAutoValidation();
+            services.AddFluentValidationClientsideAdapters();
+            services.AddValidatorsFromAssemblyContaining<AppealForCreationDtoValidator>();
         }
     }
 }
