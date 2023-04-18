@@ -194,7 +194,7 @@ namespace ProcessMe.Controllers
         private bool SendEmail(string body, string email)
         {
             RestClientOptions options = new();
-            options.Authenticator = new HttpBasicAuthenticator("api", _configuration.GetSection("EmailConfig:API_KEY").Value);
+            options.Authenticator = new HttpBasicAuthenticator("api", "key-a64900"+_configuration.GetSection("EmailConfig:API_KEY").Value);
             options.BaseUrl = new("https://api.mailgun.net/v3");
             var client = new RestClient(options);
 
