@@ -4,19 +4,19 @@ using ProcessMe.Models.Entities;
 
 namespace ProcessMe.Data.Configurations
 {
-    internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
-    {
-        public void Configure(EntityTypeBuilder<User> builder)
-        {
-            builder.ToTable("Users");
+    //internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
+    //{
+    //    public void Configure(EntityTypeBuilder<User> builder)
+    //    {
+    //        builder.ToTable("Users");
 
-            builder.Property(x => x.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("Id");
+    //        builder.Property(x => x.Id)
+    //            .ValueGeneratedNever()
+    //            .HasColumnName("Id");
 
-            builder.HasOne(user => user.Role)
-                .WithMany(role => role.Users)
-                .HasForeignKey("RoleId");
-        }
-    }
+    //        builder.HasOne(user => user.Role)
+    //            .WithMany(role => role.Users)
+    //            .HasForeignKey("RoleId");
+    //    }
+    //}
 }

@@ -2,7 +2,7 @@
 
 namespace ProcessMe.Data.Interfaces
 {
-    public interface IRoleRepo : IRepoBase<Role>
-    {
-    }
+    //public interface IRoleRepo : IRepoBase<Role>
+    //{
+    //}
 }

@@ -2,7 +2,7 @@
 
 namespace ProcessMe.Data.Interfaces
 {
-    public interface IUserRepo : IRepoBase<User>
-    {
-    }
+    //public interface IUserRepo : IRepoBase<User>
+    //{
+    //}
 }

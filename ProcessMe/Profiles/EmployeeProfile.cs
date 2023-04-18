@@ -23,10 +23,10 @@ namespace ProcessMe.Profiles
                 opt => opt.MapFrom(src => src.Email))
                 .ForMember(
                 dest => dest.DepartmentId,
-                opt => opt.MapFrom(src => src.DepartmentId))
-                .ForMember(
-                dest => dest.UserId,
-                opt => opt.MapFrom(src => src.UserId));
+                opt => opt.MapFrom(src => src.DepartmentId));
+                //.ForMember(
+                //dest => dest.UserId,
+                //opt => opt.MapFrom(src => src.UserId));
         }
     }
 }

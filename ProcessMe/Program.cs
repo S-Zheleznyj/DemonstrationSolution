@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Identity;
+using ProcessMe.Data;
 using ProcessMe.Infrastructure.Extensions;
 using System.Text.Json.Serialization;
 
@@ -8,6 +10,11 @@ builder.Services.ConfigureDbContext(builder.Configuration);
 builder.Services.ConfigureRepositories();
 builder.Services.ConfigureDomainManagers();
 builder.Services.ConfigureValidators();
+builder.Services.ConfigureJwtConfig(builder.Configuration);
+builder.Services.ConfigureAuthentication(builder.Configuration);
+builder.Services.AddDefaultIdentity<IdentityUser>(opt => opt.SignIn.RequireConfirmedAccount = false)
+    .AddEntityFrameworkStores<ProcessMeDbContext>();
+builder.Services.ConfigureSwagger();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -17,7 +24,6 @@ builder.Services.AddControllers()
     });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 //Add automapper service
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -32,6 +38,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -2,8 +2,8 @@
 
 namespace ProcessMe.Models.DTOs.Incoming
 {
-    public class RoleForCreationDto
-    {
-        public RoleType Type { get; set; }
-    }
+    //public class RoleForCreationDto
+    //{
+    //    public RoleType Type { get; set; }
+    //}
 }

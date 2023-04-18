@@ -14,8 +14,8 @@ namespace ProcessMe.Models.Entities
         public Department Department { get; set; }
         public ICollection<Appeal> Appeals { get; set; }
         public ICollection<Rating> Ratings { get; set; }
-        public Guid UserId { get; private set; }
-        public User User { get; set; }
+        //public Guid UserId { get; private set; }
+        //public User User { get; set; }
         public Employee() { }
 
         public Employee(EmployeeForCreationDto employeeRequest)
@@ -25,7 +25,7 @@ namespace ProcessMe.Models.Entities
             LastName = employeeRequest.LastName;
             Email = employeeRequest.Email;
             DepartmentId = employeeRequest.DepartmentId;
-            UserId = employeeRequest.UserId;
+            //UserId = employeeRequest.UserId;
         }
 
         internal static Employee FromEmployeeRequest(EmployeeForCreationDto employeeRequest)

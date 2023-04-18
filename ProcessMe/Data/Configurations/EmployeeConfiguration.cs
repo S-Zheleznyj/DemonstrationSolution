@@ -18,9 +18,9 @@ namespace ProcessMe.Data.Configurations
                 .WithMany(department => department.Employees)
                 .HasForeignKey("DepartmentId");
 
-            builder.HasOne(employee => employee.User)
-                .WithMany(user => user.Employees)
-                .HasForeignKey("UserId");
+            //builder.HasOne(employee => employee.User)
+            //    .WithMany(user => user.Employees)
+            //    .HasForeignKey("UserId");
         }
     }
 }
