@@ -5,6 +5,8 @@ using Microsoft.IdentityModel.Tokens;
 using ProcessMe.Infrastructure.Configurations;
 using ProcessMe.Models.DTOs.Incoming;
 using ProcessMe.Models.Entities;
+using RestSharp;
+using RestSharp.Authenticators;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -15,11 +17,13 @@ namespace ProcessMe.Controllers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly JwtConfig _jwtConfig;
+        private readonly IConfiguration _configuration;
 
-        public AuthenticationController(UserManager<IdentityUser> userManager, IOptions<JwtConfig> jwtConfig)
+        public AuthenticationController(UserManager<IdentityUser> userManager, IOptions<JwtConfig> jwtConfig, IConfiguration configuration)
         {
             _userManager = userManager;
             _jwtConfig = jwtConfig.Value;
+            _configuration = configuration;
         }
 
         [HttpPost]
@@ -43,19 +47,33 @@ namespace ProcessMe.Controllers
             {
                 Email = requestDto.Email,
                 UserName = requestDto.Email,
+                EmailConfirmed = false
             };
 
             var is_created = await _userManager.CreateAsync(new_user, requestDto.Password);
 
             if (is_created.Succeeded)
             {
-                var token = GenerateJwtToken(new_user);
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(new_user);
 
-                return Ok(new AuthResult()
-                {
-                    Result = true,
-                    Token = token
-                });
+                var email_body = "Please confirm your email address <a href=\"#URL#\"Click here>";
+
+                var callback_url = Request.Scheme + "://" + Request.Host + Url.Action("ConfirmEmail", "Authentication", new { userId = new_user.Id, code = code });
+
+                var body = email_body.Replace("#URL", callback_url);
+
+                var result = SendEmail(body, new_user.Email);
+                if (result)
+                    return Ok("Please, verify your email");
+
+                return Ok("Please, request an email verification link");
+                //var token = GenerateJwtToken(new_user);
+
+                //return Ok(new AuthResult()
+                //{
+                //    Result = true,
+                //    Token = token
+                //});
             }
 
             return BadRequest(new AuthResult()
@@ -66,6 +84,37 @@ namespace ProcessMe.Controllers
                     },
                 Result = false
             });
+        }
+
+        [HttpGet]
+        [Route("ConfirmEmail")]
+        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        {
+            if (userId == null || code == null)
+                return BadRequest(new AuthResult()
+                {
+                    Result = false,
+                    Errors = new()
+                    {
+                        "Invalid email confirmation url"
+                    }
+                });
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                return BadRequest(new AuthResult()
+                {
+                    Result = false,
+                    Errors = new()
+                    {
+                        "Invalid email parameters"
+                    }
+                });
+
+            //code = Encoding.UTF8.GetString(Convert.FromBase64String(code));
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+            var status = result.Succeeded ? "Thank you for confirming your email" : "Your email is not confirmed, please try again later";
+            return Ok(status);
         }
 
         [HttpPost]
@@ -81,6 +130,16 @@ namespace ProcessMe.Controllers
                     Errors = new()
                     {
                         "Invalid payload"
+                    }
+                });
+
+            if (!existing_user.EmailConfirmed)
+                return BadRequest(new AuthResult()
+                {
+                    Result = false,
+                    Errors = new()
+                    {
+                        "Email needs to be confirmed"
                     }
                 });
 
@@ -130,6 +189,27 @@ namespace ProcessMe.Controllers
             var jwtToken = jwtTokenHandler.WriteToken(token);
 
             return jwtToken;
+        }
+
+        private bool SendEmail(string body, string email)
+        {
+            RestClientOptions options = new();
+            options.Authenticator = new HttpBasicAuthenticator("api", _configuration.GetSection("EmailConfig:API_KEY").Value);
+            options.BaseUrl = new("https://api.mailgun.net/v3");
+            var client = new RestClient(options);
+
+            var request = new RestRequest("", Method.Post);
+            request.AddParameter("domain", "sandbox288b29f02f7e41ecbbacc7aefc6417a8.mailgun.org");
+            request.Resource = "{domain}/messages";
+            request.AddParameter("from", "My own sandbox Mailgun <postmaster@sandbox288b29f02f7e41ecbbacc7aefc6417a8.mailgun.org>");
+            request.AddParameter("to", email);
+            request.AddParameter("subject", "Email verification");
+            request.AddParameter("text", body);
+            request.Method = Method.Post;
+
+            var response = client.Execute(request);
+
+            return response.IsSuccessful;
         }
     }
 }
