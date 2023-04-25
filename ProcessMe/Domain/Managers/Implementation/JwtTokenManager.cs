@@ -30,14 +30,14 @@ namespace ProcessMe.Domain.Managers.Implementation
             _context = context;
         }
 
-        public async Task<AuthResult> GenerateJwtTokenAsync(IdentityUser user)
+        public async Task<AuthResult> GenerateJwtTokenAsync(IdentityUser user, IList<string> roles)
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
 
             var key = Encoding.UTF8.GetBytes(_jwtConfig.Secret);
 
             TimeSpan expiryTimeFrame = TimeSpan.FromMinutes(_jwtConfig.Lifetime);
-            var tokenDescriptor = SecurityTokenDescriptorBuilder.Build(user, expiryTimeFrame, key);
+            var tokenDescriptor = SecurityTokenDescriptorBuilder.Build(user, expiryTimeFrame, key, roles);
 
             var token = jwtTokenHandler.CreateToken(tokenDescriptor);
             var jwtToken = jwtTokenHandler.WriteToken(token);

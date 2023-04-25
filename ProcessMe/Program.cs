@@ -12,9 +12,12 @@ builder.Services.ConfigureRepositories();
 builder.Services.ConfigureDomainManagers();
 builder.Services.ConfigureValidators();
 builder.Services.ConfigureJwtConfig(builder.Configuration);
-builder.Services.AddDefaultIdentity<IdentityUser>(opt => opt.SignIn.RequireConfirmedAccount = false)
+builder.Services.AddDefaultIdentity<IdentityUser>()
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ProcessMeDbContext>();
+await builder.Services.InitializeRoles(builder.Configuration);
 builder.Services.ConfigureSwagger();
+
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>

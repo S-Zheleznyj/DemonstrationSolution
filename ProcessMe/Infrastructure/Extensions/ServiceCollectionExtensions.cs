@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -10,6 +11,7 @@ using ProcessMe.Data.Interfaces;
 using ProcessMe.Domain.Managers.Implementation;
 using ProcessMe.Domain.Managers.Interfaces;
 using ProcessMe.Infrastructure.Configurations;
+using ProcessMe.Infrastructure.Initializers;
 using ProcessMe.Infrastructure.Validation;
 using System.Text;
 
@@ -67,6 +69,17 @@ namespace ProcessMe.Infrastructure.Extensions
         public static void ConfigureJwtConfig(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<JwtConfig>(configuration.GetSection("JwtConfig"));
+        }
+
+        /// <summary> Инициализирует роли в бд</summary>
+        public static async Task InitializeRoles(this IServiceCollection services, IConfiguration configuration)
+        {
+            using(var scope = services.BuildServiceProvider())
+            {
+                var userManager = scope.GetRequiredService<UserManager<IdentityUser>>();
+                var rolesManager = scope.GetRequiredService<RoleManager<IdentityRole>>();
+                await RoleInitializer.InitializeAsync(userManager, rolesManager, configuration);
+            }
         }
 
         /// <summary> Конфигурирует Jwt</summary>

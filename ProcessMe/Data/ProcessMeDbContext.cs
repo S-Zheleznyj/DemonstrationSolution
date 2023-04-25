@@ -12,8 +12,6 @@ namespace ProcessMe.Data
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
-        //public DbSet<Role> Roles { get; set; }
-        //public DbSet<User> Users { get; set; }
         public ProcessMeDbContext(DbContextOptions<ProcessMeDbContext> options) : base(options)
         {
 
@@ -24,8 +22,6 @@ namespace ProcessMe.Data
         //    //modelBuilder.ApplyConfiguration(new DepartmentConfiguration());
         //    //modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
         //    //modelBuilder.ApplyConfiguration(new RatingConfiguration());
-        //    //modelBuilder.ApplyConfiguration(new RoleConfiguration());
-        //    //modelBuilder.ApplyConfiguration(new UserConfiguration());
         //}
     }
 }

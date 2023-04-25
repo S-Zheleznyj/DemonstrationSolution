@@ -1,51 +1,41 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using ProcessMe.Domain.Managers.Interfaces;
 using ProcessMe.Models.DTOs.Incoming;
 using ProcessMe.Models.Entities;
 
 namespace ProcessMe.Controllers
 {
-    //public class RolesController : ProcessMeBaseController
-    //{
-    //    private readonly IRoleManager _manager;
-    //    public RolesController(IRoleManager manager)
-    //    {
-    //        _manager = manager;
-    //    }
-    //    /// <summary> Возвращает все роли</summary>
-    //    [HttpGet]
-    //    public async Task<IActionResult> GetItems()
-    //    {
-    //        var result = await _manager.GetItems();
+    [Authorize(Roles = "Admin,Superadmin")]
+    public class RolesController : ProcessMeBaseController
+    {
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-    //        return Ok(result);
-    //    }
+        public RolesController(RoleManager<IdentityRole> roleManager)
+        {
+            _roleManager = roleManager;
+        }
 
-    //    /// <summary> Возвращает роль по указанному id</summary>
-    //    [HttpGet("{id}")]
-    //    public async Task<IActionResult> Get(Guid id)
-    //    {
-    //        var result = await _manager.GetItem(id);
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody]string roleName)
+        {
+            var role = new IdentityRole(roleName);
+            var result = await _roleManager.CreateAsync(role);
+            return Ok(result);
+        }
 
-    //        return Ok(result);
-    //    }
+        [HttpDelete]
+        public async Task<IActionResult> Remove([FromBody] string roleName)
+        {
+            var existed_role = await _roleManager.FindByNameAsync(roleName);
+            if (existed_role == null)
+                return NotFound($"{roleName} is not exist");
 
-    //    /// <summary> Создает оценку</summary>
-    //    [HttpPost]
-    //    public async Task<IActionResult> Create(RoleForCreationDto roleRequest)
-    //    {
-    //        var result = await _manager.Create(roleRequest);
+            var result = await _roleManager.DeleteAsync(existed_role);
 
-    //        return CreatedAtAction("Get", new { id = result }, result);
-    //    }
+            return Ok(result);
+        }
 
-    //    /// <summary> Редактирует роль</summary>
-    //    [HttpPut]
-    //    public async Task<IActionResult> Update([FromQuery] Guid id, [FromBody] RoleForCreationDto roleRequest)
-    //    {
-    //        await _manager.Update(id, roleRequest);
-
-    //        return NoContent();
-    //    }
-    //}
+    }
 }

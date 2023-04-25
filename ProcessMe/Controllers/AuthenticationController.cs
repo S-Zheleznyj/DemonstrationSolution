@@ -56,7 +56,6 @@ namespace ProcessMe.Controllers
                 //EmailConfirmed = false    Учетку на mailgun заблокировали. Пока сразу будет верифицированный email
                 EmailConfirmed = true,
             };
-
             var is_created = await _userManager.CreateAsync(new_user, requestDto.Password);
 
             if (is_created.Succeeded)
@@ -75,7 +74,6 @@ namespace ProcessMe.Controllers
 
                 //return Ok("Please, request an email verification link");
                 //var token = await GenerateJwtToken(new_user);
-
                 return Ok(is_created);
             }
 
@@ -157,8 +155,8 @@ namespace ProcessMe.Controllers
                         "Invalid credentials"
                     }
                 });
-
-            var jwtToken = await _tokenManager.GenerateJwtTokenAsync(existing_user);
+            var roles = await _userManager.GetRolesAsync(existing_user);
+            var jwtToken = await _tokenManager.GenerateJwtTokenAsync(existing_user, roles);
 
             return Ok(jwtToken);
         }
@@ -189,7 +187,8 @@ namespace ProcessMe.Controllers
 
             var dbUser = await _userManager.FindByIdAsync(userId);
 
-            var result = await _tokenManager.GenerateJwtTokenAsync(dbUser);
+            var roles = await _userManager.GetRolesAsync(dbUser);
+            var result = await _tokenManager.GenerateJwtTokenAsync(dbUser, roles);
             return Ok(result);
         }
 

@@ -6,7 +6,7 @@ using ProcessMe.Models.DTOs.Incoming;
 
 namespace ProcessMe.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "admin,superadmin")]
     public class AppealsController : ProcessMeBaseController
     {
         private readonly IAppealManager _manager;
