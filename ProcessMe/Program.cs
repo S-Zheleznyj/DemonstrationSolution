@@ -7,11 +7,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.ConfigureDbContext(builder.Configuration);
+builder.Services.ConfigureAuthentication(builder.Configuration);
 builder.Services.ConfigureRepositories();
 builder.Services.ConfigureDomainManagers();
 builder.Services.ConfigureValidators();
 builder.Services.ConfigureJwtConfig(builder.Configuration);
-builder.Services.ConfigureAuthentication(builder.Configuration);
 builder.Services.AddDefaultIdentity<IdentityUser>(opt => opt.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ProcessMeDbContext>();
 builder.Services.ConfigureSwagger();

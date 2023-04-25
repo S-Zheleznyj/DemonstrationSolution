@@ -49,6 +49,7 @@ namespace ProcessMe.Infrastructure.Extensions
             services.AddScoped<IRatingManager, RatingManager>();
             //services.AddScoped<IRoleManager, RoleManager>();
             //services.AddScoped<IUserManager, UserManager>();
+            services.AddScoped<IJwtTokenManager, JwtTokenManager>();
         }
 
         /// <summary> Конфигурирует валидаторы</summary>
@@ -59,6 +60,7 @@ namespace ProcessMe.Infrastructure.Extensions
             services.AddValidatorsFromAssemblyContaining<AppealForCreationDtoValidator>();
             services.AddValidatorsFromAssemblyContaining<UserRegistrationRequestDtoValidator>();
             services.AddValidatorsFromAssemblyContaining<UserLoginRequestDtoValidator>();
+            services.AddValidatorsFromAssemblyContaining<TokenRequestDtoValidator>();
         }
 
         /// <summary> Конфигурирует Jwt</summary>
@@ -70,6 +72,18 @@ namespace ProcessMe.Infrastructure.Extensions
         /// <summary> Конфигурирует Jwt</summary>
         public static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
+            var key = Encoding.ASCII.GetBytes(configuration.GetSection("JwtConfig:Secret").Value);
+
+            var tokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = false, // for dev
+                ValidateAudience = false, // for dev
+                RequireExpirationTime = true,
+                ValidateLifetime = true
+            };
+
             services.AddAuthentication(opt =>
             {
                 opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -78,18 +92,8 @@ namespace ProcessMe.Infrastructure.Extensions
             })
             .AddJwtBearer(jwt =>
             {
-                var key = Encoding.ASCII.GetBytes(configuration.GetSection("JwtConfig:Secret").Value);
-
                 jwt.SaveToken = true;
-                jwt.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false, // for dev
-                    ValidateAudience = false, // for dev
-                    RequireExpirationTime = false, //for dev
-                    ValidateLifetime = true
-                };
+                jwt.TokenValidationParameters = tokenValidationParameters;
             });
         }
 

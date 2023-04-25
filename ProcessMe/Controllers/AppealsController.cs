@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProcessMe.Domain.Managers.Interfaces;
 using ProcessMe.Models.DTOs.Incoming;
-using ProcessMe.Models.Entities;
 
 namespace ProcessMe.Controllers
 {

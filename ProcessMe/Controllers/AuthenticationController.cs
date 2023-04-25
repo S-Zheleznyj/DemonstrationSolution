@@ -1,9 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using ProcessMe.Data;
+using ProcessMe.Domain.Managers.Interfaces;
 using ProcessMe.Infrastructure.Configurations;
 using ProcessMe.Models.DTOs.Incoming;
+using ProcessMe.Models.DTOs.Outgoing;
 using ProcessMe.Models.Entities;
 using RestSharp;
 using RestSharp.Authenticators;
@@ -16,16 +20,18 @@ namespace ProcessMe.Controllers
     public class AuthenticationController : ProcessMeBaseController
     {
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly JwtConfig _jwtConfig;
         private readonly IConfiguration _configuration;
+        private readonly IJwtTokenManager _tokenManager;
 
-        public AuthenticationController(UserManager<IdentityUser> userManager, IOptions<JwtConfig> jwtConfig, IConfiguration configuration)
+        public AuthenticationController(UserManager<IdentityUser> userManager, IConfiguration configuration, 
+            IJwtTokenManager tokenManager)
         {
             _userManager = userManager;
-            _jwtConfig = jwtConfig.Value;
             _configuration = configuration;
+            _tokenManager = tokenManager;
         }
 
+        /// <summary> Регистрирует пользователя системы</summary>
         [HttpPost]
         [Route("Register")]
         public async Task<IActionResult> Register([FromBody] UserRegistrationRequestDto requestDto)
@@ -35,7 +41,7 @@ namespace ProcessMe.Controllers
             {
                 return BadRequest(new AuthResult()
                 {
-                    Result = false,
+                    IsSuccess = false,
                     Errors = new List<string>()
                         {
                             "Email already exist"
@@ -47,33 +53,30 @@ namespace ProcessMe.Controllers
             {
                 Email = requestDto.Email,
                 UserName = requestDto.Email,
-                EmailConfirmed = false
+                //EmailConfirmed = false    Учетку на mailgun заблокировали. Пока сразу будет верифицированный email
+                EmailConfirmed = true,
             };
 
             var is_created = await _userManager.CreateAsync(new_user, requestDto.Password);
 
             if (is_created.Succeeded)
             {
-                var code = await _userManager.GenerateEmailConfirmationTokenAsync(new_user);
+                //var code = await _userManager.GenerateEmailConfirmationTokenAsync(new_user);
 
-                var email_body = "Please confirm your email address <a href=\"#URL#\"Click here>";
+                //var email_body = "Please confirm your email address <a href=\"#URL#\"Click here>";
 
-                var callback_url = Request.Scheme + "://" + Request.Host + Url.Action("ConfirmEmail", "Authentication", new { userId = new_user.Id, code = code });
+                //var callback_url = Request.Scheme + "://" + Request.Host + Url.Action("ConfirmEmail", "Authentication", new { userId = new_user.Id, code = code });
 
-                var body = email_body.Replace("#URL", callback_url);
+                //var body = email_body.Replace("#URL", callback_url);
 
-                var result = SendEmail(body, new_user.Email);
-                if (result)
-                    return Ok("Please, verify your email");
+                //var result = SendEmail(body, new_user.Email);
+                //if (result)
+                //    return Ok("Please, verify your email");
 
-                return Ok("Please, request an email verification link");
-                //var token = GenerateJwtToken(new_user);
+                //return Ok("Please, request an email verification link");
+                //var token = await GenerateJwtToken(new_user);
 
-                //return Ok(new AuthResult()
-                //{
-                //    Result = true,
-                //    Token = token
-                //});
+                return Ok(is_created);
             }
 
             return BadRequest(new AuthResult()
@@ -82,7 +85,7 @@ namespace ProcessMe.Controllers
                     {
                         "Server error"
                     },
-                Result = false
+                IsSuccess = false
             });
         }
 
@@ -93,7 +96,7 @@ namespace ProcessMe.Controllers
             if (userId == null || code == null)
                 return BadRequest(new AuthResult()
                 {
-                    Result = false,
+                    IsSuccess = false,
                     Errors = new()
                     {
                         "Invalid email confirmation url"
@@ -104,7 +107,7 @@ namespace ProcessMe.Controllers
             if (user == null)
                 return BadRequest(new AuthResult()
                 {
-                    Result = false,
+                    IsSuccess = false,
                     Errors = new()
                     {
                         "Invalid email parameters"
@@ -126,7 +129,7 @@ namespace ProcessMe.Controllers
             if (existing_user == null)
                 return BadRequest(new AuthResult()
                 {
-                    Result = false,
+                    IsSuccess = false,
                     Errors = new()
                     {
                         "Invalid payload"
@@ -136,7 +139,7 @@ namespace ProcessMe.Controllers
             if (!existing_user.EmailConfirmed)
                 return BadRequest(new AuthResult()
                 {
-                    Result = false,
+                    IsSuccess = false,
                     Errors = new()
                     {
                         "Email needs to be confirmed"
@@ -148,47 +151,46 @@ namespace ProcessMe.Controllers
             if (!isCorrect)
                 return BadRequest(new AuthResult()
                 {
-                    Result = false,
+                    IsSuccess = false,
                     Errors = new()
                     {
                         "Invalid credentials"
                     }
                 });
 
-            var jwtToken = GenerateJwtToken(existing_user);
+            var jwtToken = await _tokenManager.GenerateJwtTokenAsync(existing_user);
 
-            return Ok(new AuthResult()
-            {
-                Result = true,
-                Token = jwtToken
-            });
+            return Ok(jwtToken);
         }
 
-        private string GenerateJwtToken(IdentityUser user)
+        [HttpPost]
+        [Route("RefreshToken")]
+        public async Task<IActionResult> RefreshToken([FromBody] TokenRequestDto tokenRequest)
         {
-            var jwtTokenHandler = new JwtSecurityTokenHandler();
+            var verifyTokenResult = _tokenManager.VerifyToken(tokenRequest.Token, out string jti);
+            if (!verifyTokenResult.IsSuccess)
+                return BadRequest(verifyTokenResult);
 
-            var key = Encoding.UTF8.GetBytes(_jwtConfig.Secret);
-
-            var tokenDescriptor = new SecurityTokenDescriptor()
-            {
-                Subject = new System.Security.Claims.ClaimsIdentity(new[]
+            var storedRefreshToken = await _tokenManager.GetRefreshTokenByValueAsync(tokenRequest.RefreshToken);
+            if (storedRefreshToken == null)
+                return BadRequest(new OutgoingResult()
                 {
-                    new Claim("Id", user.Id),
-                    new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                    new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToUniversalTime().ToString())
-                }),
+                    IsSuccess = false,
+                    Errors = new() { "Token is not exist" }
+                });
 
-                Expires = DateTime.Now.AddHours(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
-            };
+            var verifyRefreshTokenResult = _tokenManager.VerifyRefreshToken(storedRefreshToken, jti, out string userId);
+            if (!verifyRefreshTokenResult.IsSuccess)
+                return BadRequest(verifyRefreshTokenResult);
 
-            var token = jwtTokenHandler.CreateToken(tokenDescriptor);
-            var jwtToken = jwtTokenHandler.WriteToken(token);
+            storedRefreshToken.SetIsUsed();
+            await _tokenManager.UpdateRefreshTokenAsync(storedRefreshToken);
 
-            return jwtToken;
+
+            var dbUser = await _userManager.FindByIdAsync(userId);
+
+            var result = await _tokenManager.GenerateJwtTokenAsync(dbUser);
+            return Ok(result);
         }
 
         private bool SendEmail(string body, string email)
