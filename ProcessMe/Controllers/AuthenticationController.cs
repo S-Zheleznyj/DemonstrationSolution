@@ -39,7 +39,7 @@ namespace ProcessMe.Controllers
             var user_exist = await _userManager.FindByEmailAsync(requestDto.Email);
             if (user_exist != null)
             {
-                return BadRequest(new AuthResult()
+                return BadRequest(new OutgoingResult()
                 {
                     IsSuccess = false,
                     Errors = new List<string>()
@@ -79,7 +79,7 @@ namespace ProcessMe.Controllers
                 return Ok(is_created);
             }
 
-            return BadRequest(new AuthResult()
+            return BadRequest(new OutgoingResult()
             {
                 Errors = new List<string>()
                     {
@@ -94,7 +94,7 @@ namespace ProcessMe.Controllers
         public async Task<IActionResult> ConfirmEmail(string userId, string code)
         {
             if (userId == null || code == null)
-                return BadRequest(new AuthResult()
+                return BadRequest(new OutgoingResult()
                 {
                     IsSuccess = false,
                     Errors = new()
@@ -105,7 +105,7 @@ namespace ProcessMe.Controllers
 
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
-                return BadRequest(new AuthResult()
+                return BadRequest(new OutgoingResult()
                 {
                     IsSuccess = false,
                     Errors = new()
@@ -127,7 +127,7 @@ namespace ProcessMe.Controllers
             var existing_user = await _userManager.FindByEmailAsync(loginRequest.Email);
 
             if (existing_user == null)
-                return BadRequest(new AuthResult()
+                return BadRequest(new OutgoingResult()
                 {
                     IsSuccess = false,
                     Errors = new()
@@ -137,7 +137,7 @@ namespace ProcessMe.Controllers
                 });
 
             if (!existing_user.EmailConfirmed)
-                return BadRequest(new AuthResult()
+                return BadRequest(new OutgoingResult()
                 {
                     IsSuccess = false,
                     Errors = new()
@@ -149,7 +149,7 @@ namespace ProcessMe.Controllers
             var isCorrect = await _userManager.CheckPasswordAsync(existing_user, loginRequest.Password);
 
             if (!isCorrect)
-                return BadRequest(new AuthResult()
+                return BadRequest(new OutgoingResult()
                 {
                     IsSuccess = false,
                     Errors = new()
